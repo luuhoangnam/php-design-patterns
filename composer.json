@@ -1,0 +1,20 @@
+{
+    "name": "luuhoangnam/php-design-patterns",
+    "description": "Just for demo purpose",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luu Hoang Nam",
+            "email": "hoangnam0705@icloud.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Nam\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.2"
+    }
+}
