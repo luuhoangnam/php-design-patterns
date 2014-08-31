@@ -172,4 +172,43 @@ _An accepted solution for a common problem_
 			}
 		}
 	
-	
+## Gateway Pattern
+- **When**: When you need to retrieve or persist information.
+- **Why**: It offers a simple public interface for complicated persistence operations. It also encapsulates persistence knowledge and decouples business logic from persistence logic.
+- Example
+
+		class A { }
+
+		interface Gateway
+		{
+			public function persist(A $a);
+			
+			public function retrieve($id);
+		}
+		
+		class FileGateway implements Gateway
+		{
+			public function persist(A $a)
+			{
+				// TODO: Store serialized an A object to filesystem
+			}
+			
+			public function retrieve($id)
+			{
+				// TODO: Retrieve an A object by its id from filesystem
+			}
+		}
+		
+		public class DbGateway implements Gateway
+		{
+			public function persist(A $a)
+			{
+				// TODO: Store serialized an A object to database
+			}
+			
+			public function retrieve($id)
+			{
+				// TODO: Store serialized an A object to database
+			}
+		}
+
