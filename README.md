@@ -314,4 +314,81 @@ _An accepted solution for a common problem_
 				$this->assertEquals(2, $repository->findAllBannedUsers()); // Assume that have 2 users has been banned.
 			}
 		}
+		
+## Null Pattern
+- **When**: You frequently check for null or you have refused bequests.
+- **Why**: It can add clarity to your code and forces you to think more about the behavior of your objects.
+- Example
+
+		interface Product
+		{
+			public function getPrice();
+			
+			public function getName();
+		}
+		
+		class Keyboard implements Product
+		{
+			public function getPrice()
+			{
+				return 50;
+			}
+			
+			public function getName()
+			{
+				return 'Keyboard';
+			}
+		}
+
+		class NullProduct extends Product
+		{
+			public function getPrice()
+			{
+				return 0;
+			}
+			
+			public function getName()
+			{
+				return '';
+			}
+		}
+		
+		class ProductManager
+		{
+			private $products;
+			
+			public function addProduct(Product $product)
+			{
+				$this->products[] = $product;
+			}
+			
+			public function getTotal()
+			{
+				$total = 0;
+				foreach($this->products as $product)
+				{
+					$total += $product->getPrice();
+				}
+				
+				return $total;
+			}
+		}
+
+- Test
+
+		class ProductManagerTest extends PHPUnit_Framework_TestCase
+		{
+			public function testItShouldRemainsTotalWhenAddNullProduct()
+			{
+				$productManager = new ProductManager;	
+				$productManager->addProduct(new Keyboard);
+				$total = $this->getTotal();
+				
+				$productManager->addProduct(new NullProduct);
+				$finalTotal = $this->getTotal();
+				
+				$this->assertEquals(50, $total);
+				$this->assertEquals(50, $finalTotal);
+			}
+		}
 
