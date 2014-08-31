@@ -1,5 +1,7 @@
 # Agile Design Pattern
 An accepted solution for a common problem
+# Agile Design Patterns
+_An accepted solution for a common problem_
 
 ## Factory Pattern
 
