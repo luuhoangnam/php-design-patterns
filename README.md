@@ -454,70 +454,79 @@ _An accepted solution for a common problem_
 - **Why**: It forces clients to perform a single task and affect multiple objects.
 - **Example**
 
-		class Job
+		class Message
 		{
-			private $worker;
+			private $content;
 			
-			public function __construct(Worker $worker)
+			public function __construct($content)
 			{
-				$this->worker = $worker
-			}
-			
-			public function execute()
-			{
-				$result = $this->doHardWork();
-				
-				if (!$result)
-					$this->worker->enqueue($this);
-			}
-			
-			public function doHardWork()
-			{
-				sleep(5);
+				$this->content = $content;
 			}
 		}
 
-		class Worker
+		class Queue
 		{
-			private $jobs = [];
+			private $dispatcher;
 			
-			public function enqueue(Job $job)
+			private $messages = [];
+			
+			public function __construct(Dispatcher $dispatcher)
 			{
-				$this->jobs[] = $job;
+				$this->dispatcher = $dispatcher;
 			}
 			
-			public function run()
+			public function enqueue(Message $message)
 			{
-				while($this->jobs)
-				{
-					$job = array_shift($this->jobs);
-					
-					$job->execute();
-				}
+				$this->messages[] = $message;
+				
+				$this->dispatcher->notify();
+			}
+			
+			public function dequeue()
+			{
+				return array_shift($this->messages);
 			}
 		}
 		
-- **Test**
-
-		class WorkerTest extends PHPUnit_Framework_TestCase
+		class Dispatcher
 		{
-			public function testItCanRunJobs
+			public function notify()
 			{
-				$worker = new Worker;
-				$jobs = $this->createJobs($worker, 100);
+				// Spawn new Servant for each method call
+				$servant = new Servant();
+				$servant->start();
 				
-				$worker->run();
-			}
-			
-			private function createJobs($worker, $number)
-			{
-				$jobs = [];
-				for($i=0 ; $i < $number ; $i++)
-				{
-					$jobs = new Job($worker);
-				}
+				// Do another things
 				
-				return $jobs;
+				$servant->wait(function ($type, $buffer) {
+					// Return job result
+				});
 			}
 		}
 		
+		class Servant extends Process
+		{
+			// For example, we simply declare Servant extends Process from symfony/process package to it can run asynchronously.
+		}
+		
+		interface Proxy
+		{
+			public function visitUrl($url);
+		}
+		
+		class HttpProxy
+		{
+			private $queue;
+			
+			public function __construct(Queue $queue)
+			{
+				$this->queue = $queue;
+			}
+			
+			public function visitUrl($url)
+			{
+				$message = new Message($url);
+				
+				$this->queue->enqueue($message);
+			}
+		}
