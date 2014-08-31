@@ -530,3 +530,40 @@ _An accepted solution for a common problem_
 				$this->queue->enqueue($message);
 			}
 		}
+		
+## Template Method Pattern
+- **When**: Eliminate duplication in a simple way.
+- **Why**: There is duplication and flexibility is not a problem.
+- **Example**
+
+		abstract class Animal
+		{
+			public function run()
+			{
+				return 'Running';
+			}
+			
+			public function eat()
+			{
+				return 'Eating';
+			}
+		}
+		
+		class Dog
+		{
+			public function woof()
+			{
+				return 'Woof Woof';
+			}
+		}
+		
+		class Cat
+		{
+			public function meow()
+			{
+				return 'Meow...';
+			}
+		}
+		
+		
+		
