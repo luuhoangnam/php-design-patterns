@@ -1,9 +1,9 @@
-# Agile Design Pattern
-An accepted solution for a common problem
 # Agile Design Patterns
 _An accepted solution for a common problem_
 
 ## Factory Pattern
+- **When**: Use a Factory Pattern when you find yourself writing code to gather information necessary to create objects.
+- **Why**: Factories help to contain the logic of object creation in a single place. They can also break dependencies to facilitate loose coupling and dependency injection to allow for better testing.
 
 ## Visitor Pattern
 - **When**: A decorator is not appropriate and some extra complexity is acceptable.
