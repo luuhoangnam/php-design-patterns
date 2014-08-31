@@ -217,7 +217,12 @@ _An accepted solution for a common problem_
 - **Why**: To offer a non-intrusive approach to creating objects behind the scenes. It also opens the possibility to retrieve these object on the fly, lazily, and from different sources.
 - Example
 
-		public class Cat
+		interface Animal
+		{
+			public function run();
+		}
+
+		class Cat implements Animal
 		{
 			public function run()
 			{
@@ -230,7 +235,7 @@ _An accepted solution for a common problem_
 			}
 		}
 		
-		public function CatProxy
+		class CatProxy implements Animal
 		{
 			private $cat;
 			
