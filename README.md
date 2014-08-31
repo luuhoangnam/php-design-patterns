@@ -250,3 +250,68 @@ _An accepted solution for a common problem_
 			// CatProxy only provides run() method and hide another unwanted to know methods
 		}
 
+## Repository Pattern
+- **When**: You need to create multiple objects based on search criteria, or when you need to save multiple objects to the persistence layer.
+- **Why**: To let clients that need specific objects to work with a common and well isolated query and persistence language. It removes even more creation-related code from the business logic.
+- Example
+
+		class UserRepository
+		{
+			private $factory;
+			private $gateway;
+			
+			public function __construct(UserFactory $factory, UserGateway $gateway)
+			{
+				$this->factory = $factory;
+				$this->gateway = $gateway;
+			}
+			
+			public function findAll()
+			{
+				$userRecords = $this->gateway->getAllUsers();
+				
+				return $this->makeMultipleUser($userRecords);
+			}
+			
+			public function findBannedUser()
+			{
+				$userRecords = $this->gateway->where('status', '=', 'banned')->get();
+				
+				return $this->makeMultipleUser($userRecords);
+			}
+			
+			private function makeMultipleUser(array $records = [])
+			{
+				$users = [];
+				
+				foreach($records as $record)
+				{
+					$users[] = new User($record);
+				}
+				
+				return $users;
+			}
+		}
+		
+- Test
+
+		class UserRepositoryTest extends PHPUnit_Framework_TestCase
+		{
+			private $repository;
+			
+			public function setUp()
+			{
+				$this->repository = new UserRepository;
+			}
+			
+			public function testItShouldReturnAllUsers()
+			{	
+				$this->assertEquals(10, $repository->findAll()); // Assume that have 10 users.
+			}
+			
+			public function testItShouldReturnBannedUsers()
+			{
+				$this->assertEquals(2, $repository->findAllBannedUsers()); // Assume that have 2 users has been banned.
+			}
+		}
+
