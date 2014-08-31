@@ -211,4 +211,37 @@ _An accepted solution for a common problem_
 				// TODO: Store serialized an A object to database
 			}
 		}
+		
+## Proxy Pattern
+- **When**: You have to retrieve information from a persistence layer or external source, but don't want your business logic to know this.
+- **Why**: To offer a non-intrusive approach to creating objects behind the scenes. It also opens the possibility to retrieve these object on the fly, lazily, and from different sources.
+- Example
+
+		public class Cat
+		{
+			public function run()
+			{
+				return 'Cat is running';
+			}
+			
+			public function meow()
+			{
+				return 'Cat is meowing';
+			}
+		}
+		
+		public function CatProxy
+		{
+			private $cat;
+			
+			public function run()
+			{
+				if (is_null($this->cat))
+					$this->cat = new Cat;
+				
+				return $this->cat->run();
+			}
+			
+			// CatProxy only provides run() method and hide another unwanted to know methods
+		}
 
