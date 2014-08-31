@@ -8,7 +8,7 @@ _An accepted solution for a common problem_
 ## Visitor Pattern
 - **When**: A decorator is not appropriate and some extra complexity is acceptable.
 - **Why**: To allow and organized approach to defining functionality for several objects but at the price of higher complexity.
-- Example code
+- Example
 
 		interface Host
 		{
@@ -55,7 +55,7 @@ _An accepted solution for a common problem_
 			}
 		}
 		
-- Test Code
+- Test
 
 		class VisitorTest extends PHPUnit_Framework_TestCase
 		{
@@ -70,6 +70,105 @@ _An accepted solution for a common problem_
 				$stubs = $a->getStubs(); // $a can get stubs from $b when $b accepted
 				
 				$this->assertEquals('stubs', $stubs);
+			}
+		}
+	
+## State Pattern
+- **When**: FSM-like logic is required to be implemented.
+- **Why**: To eliminate the problems of a switch...case statement, and to better encapsulate the meaning of each individual state.
+- Example
+
+		interface Machine
+		{
+			public function next();
+			
+			public function setState(State $state);
+		}
+		
+		interface State
+		{
+			public function next(Machine $machine);
+		}
+		
+		class First implements State
+		{
+			public function next(Machine $machine)
+			{
+				$machine->setState(new Second);
+			}
+		}
+		
+		class Second implements State
+		{
+			public function next(Machine $machine)
+			{
+				$machine->setState(new Third);
+			}
+		}
+		
+		class Third implements State
+		{
+			public function next(Machine $machine)
+			{
+				$machine->setState(new Third);
+			}
+		}
+		
+		class SimpleMachine implements Machine
+		{
+			private $currentState;
+			
+			public function __construct(State $initialState)
+			{
+				$this->setState($initialState);
+			}
+			
+			public function next()
+			{
+				$this->currentState->next();
+			}
+			
+			public function setState(State $state)
+			{
+				$this->currentState = $state;
+			}
+			
+			public function getCurrentState()
+			{
+				return $this->currentState;
+			}
+		}
+		
+- Test
+
+		class SimpleMachineTest extends PHPUnit_Framework_TestCase
+		{
+			public function testItStartWithInitialState()
+			{
+				$machine = new SimpleMachineTest(new First);
+				
+				$this->assertInstanceOf('First', $machine->getCurrentState);
+			}
+			
+			public function testItCanMoveOnNextState()
+			{
+				$machine = new SimpleMachineTest(new First);
+				
+				$machine->next();
+				
+				$this->assertInstanceOf('Second', $machine->getCurrentState);
+				
+				$machine->next();
+				
+				$this->assertInstanceOf('Third', $machine->getCurrentState);
+			}
+			
+			public function testItRemainOnFinalState()
+			{
+				$machine = new SimpleMachineTest(new Third);
+				$machine->next();
+				
+				$this->assertInstanceOf('Third', $machine->getCurrentState);
 			}
 		}
 	
