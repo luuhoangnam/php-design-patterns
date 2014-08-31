@@ -8,7 +8,7 @@ _An accepted solution for a common problem_
 ## Visitor Pattern
 - **When**: A decorator is not appropriate and some extra complexity is acceptable.
 - **Why**: To allow and organized approach to defining functionality for several objects but at the price of higher complexity.
-- Example
+- **Example**
 
 		interface Host
 		{
@@ -55,7 +55,7 @@ _An accepted solution for a common problem_
 			}
 		}
 		
-- Test
+- **Test**
 
 		class VisitorTest extends PHPUnit_Framework_TestCase
 		{
@@ -76,7 +76,7 @@ _An accepted solution for a common problem_
 ## State Pattern
 - **When**: FSM-like logic is required to be implemented.
 - **Why**: To eliminate the problems of a switch...case statement, and to better encapsulate the meaning of each individual state.
-- Example
+- **Example**
 
 		interface Machine
 		{
@@ -139,7 +139,7 @@ _An accepted solution for a common problem_
 			}
 		}
 		
-- Test
+- **Test**
 
 		class SimpleMachineTest extends PHPUnit_Framework_TestCase
 		{
@@ -175,7 +175,7 @@ _An accepted solution for a common problem_
 ## Gateway Pattern
 - **When**: When you need to retrieve or persist information.
 - **Why**: It offers a simple public interface for complicated persistence operations. It also encapsulates persistence knowledge and decouples business logic from persistence logic.
-- Example
+- **Example**
 
 		class A { }
 
@@ -215,7 +215,7 @@ _An accepted solution for a common problem_
 ## Proxy Pattern
 - **When**: You have to retrieve information from a persistence layer or external source, but don't want your business logic to know this.
 - **Why**: To offer a non-intrusive approach to creating objects behind the scenes. It also opens the possibility to retrieve these object on the fly, lazily, and from different sources.
-- Example
+- **Example**
 
 		interface Animal
 		{
@@ -253,7 +253,7 @@ _An accepted solution for a common problem_
 ## Repository Pattern
 - **When**: You need to create multiple objects based on search criteria, or when you need to save multiple objects to the persistence layer.
 - **Why**: To let clients that need specific objects to work with a common and well isolated query and persistence language. It removes even more creation-related code from the business logic.
-- Example
+- **Example**
 
 		class UserRepository
 		{
@@ -293,7 +293,7 @@ _An accepted solution for a common problem_
 			}
 		}
 		
-- Test
+- **Test**
 
 		class UserRepositoryTest extends PHPUnit_Framework_TestCase
 		{
@@ -318,7 +318,7 @@ _An accepted solution for a common problem_
 ## Null Pattern
 - **When**: You frequently check for null or you have refused bequests.
 - **Why**: It can add clarity to your code and forces you to think more about the behavior of your objects.
-- Example
+- **Example**
 
 		interface Product
 		{
@@ -374,7 +374,7 @@ _An accepted solution for a common problem_
 			}
 		}
 
-- Test
+- **Test**
 
 		class ProductManagerTest extends PHPUnit_Framework_TestCase
 		{
@@ -395,7 +395,7 @@ _An accepted solution for a common problem_
 ## Command Pattern
 - **When**: When you have to perform many operations to prepare objects for use.
 - **Why**: To move complexity from the consuming code to the creating code.
-- Example
+- **Example**
 
 		interface Command
 		{
@@ -448,3 +448,76 @@ _An accepted solution for a common problem_
 			}
 		}
 
+## Active Object Pattern
+- **What**: The Active Object Pattern decouples the method invocation from method execution.
+- **When**: Several similar objects have to execute with a single command.
+- **Why**: It forces clients to perform a single task and affect multiple objects.
+- **Example**
+
+		class Job
+		{
+			private $worker;
+			
+			public function __construct(Worker $worker)
+			{
+				$this->worker = $worker
+			}
+			
+			public function execute()
+			{
+				$result = $this->doHardWork();
+				
+				if (!$result)
+					$this->worker->enqueue($this);
+			}
+			
+			public function doHardWork()
+			{
+				sleep(5);
+			}
+		}
+
+		class Worker
+		{
+			private $jobs = [];
+			
+			public function enqueue(Job $job)
+			{
+				$this->jobs[] = $job;
+			}
+			
+			public function run()
+			{
+				while($this->jobs)
+				{
+					$job = array_shift($this->jobs);
+					
+					$job->execute();
+				}
+			}
+		}
+		
+- **Test**
+
+		class WorkerTest extends PHPUnit_Framework_TestCase
+		{
+			public function testItCanRunJobs
+			{
+				$worker = new Worker;
+				$jobs = $this->createJobs($worker, 100);
+				
+				$worker->run();
+			}
+			
+			private function createJobs($worker, $number)
+			{
+				$jobs = [];
+				for($i=0 ; $i < $number ; $i++)
+				{
+					$jobs = new Job($worker);
+				}
+				
+				return $jobs;
+			}
+		}
+		
