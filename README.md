@@ -391,4 +391,60 @@ _An accepted solution for a common problem_
 				$this->assertEquals(50, $finalTotal);
 			}
 		}
+		
+## Command Pattern
+- **When**: When you have to perform many operations to prepare objects for use.
+- **Why**: To move complexity from the consuming code to the creating code.
+- Example
+
+		interface Command
+		{
+			public function execute();
+		}
+		
+		class MakeDirectoryCommand implements Command
+		{
+			public function execute()
+			{
+				return `mkdir stuff`;
+			}
+		}
+		
+		class ListCommand implements Command
+		{
+			public function execute()
+			{
+				return `ls -al`;
+			}
+		}
+		
+		class Program
+		{
+			private $commands;
+			
+			public function __construct()
+			{
+				$commands = ['MakeDirectory', 'List'];
+				foreach($commands as $command)
+				{
+					$this->addCommand(new "{$command}Command");
+				}
+			}
+			
+			public function addCommand(Command $cmd)
+			{
+				$this->commands[] = $cmd;
+			}
+			
+			public function execute()
+			{
+				$output = '';
+				foreach($this->commands as $cmd)
+				{
+					$output .= $cmd->execute();
+				}
+				
+				printf($output); // Print out all command outputs
+			}
+		}
 
