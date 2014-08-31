@@ -25,5 +25,13 @@ class ShoppingCart
         $this->productsInTheCart[] = $this->productFactory->make( $productId );
     }
 
+    /**
+     * @return array
+     */
+    public function getProductsInTheCart()
+    {
+        return $this->productsInTheCart;
+    }
+
 
 }
