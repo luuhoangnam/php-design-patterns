@@ -231,7 +231,38 @@ _An accepted solution for a common problem_
 			}
 		}
 
+## Singleton Pattern
+- **Intent**
+	- Ensure a class has only one instance, and provide a global point of access to it.
+	- Encapsulated "just-in-time initialization" or "initialization on first use".
+- **Check list**
+	1. Define a private static attribute in the "single instance" class.
+	2. Define a public static accessor function in the class.
+	3. Do "lazy initialization" (creation on first use) in the accessor function.
+	4. Define all constructors to be protected or private.
+	5. Clients may only use the accessor function to manipulate the Singleton.
+- **When**: You need to achieve singularity and want a cross platform, lazily evaluated solution which also offers the possibility of creation through derivation.
+- **Why**: To offer a single point of access when needed.
+- **Example**
 
+		class Singleton
+		{
+			private static $instance;
+			
+			private function __construct()
+			{
+				// Complicated process
+			}
+			
+			public static function getInstance()
+			{
+				if (! (static::$instance instanceof Singleton)) {
+					static::$instance = new Singleton;
+				}
+				
+				return static::$instance;
+			}
+		}
 
 
 		
