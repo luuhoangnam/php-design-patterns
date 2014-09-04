@@ -263,6 +263,28 @@ _An accepted solution for a common problem_
 				return static::$instance;
 			}
 		}
+		
+## Monostate Pattern
+- **When**: Transparency, derivabitility, and polymorphism are preferred together with singularity.
+- **Why**: To hide from the users/clients the fact that the object offers singularity.
+- **Example**
+
+		class Monostate
+		{
+			private static $value;
+			
+			public function setValue($value)
+			{
+	    		static::$value = $value;
+			}
+		
+		    public function getValue()
+			{
+			    return static::$value;
+			}
+		}
+		
+		
 
 
 		
