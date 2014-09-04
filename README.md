@@ -88,7 +88,7 @@ _An accepted solution for a common problem_
 		}
 		
 ## Observer Pattern
-- **Definition**: In the Observer pattern a `subject` object will _notify_ an `observer` object if the subject's state _changes_.
+- **Intent**: In the Observer pattern a `subject` object will _notify_ an `observer` object if the subject's state _changes_.
 - **Types**:
 	- **Polling** – Objects accept subscribers. Subscribers observe the object and are notified on specific events. Subscribers ask the observed objects for more information in order to take an action.
 	- **Push** – Like the polling method, objects accept subscribers, and subscribers are notified when an event occurs. But when a notification happens, the observer also receives a hint that the observer can act on.
@@ -151,5 +151,87 @@ _An accepted solution for a common problem_
 			}
 		}
 
+## Mediator Pattern
+- **Intent**
+	- Define an object that encapsulates how a set of objects interact. Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently.
+	- Design an intermediary to decouple many peers.
+	- Promote the many-to-many relationships between interacting peers to "full object status".
+- **When**: The affected objects can not know about the observed objects.
+- **Why**: To offer a hidden mechanism of affecting other objects in the system when one object changes.
+- **Example**
+
+		class Mediator
+		{
+			private $observered;
+			
+			private $afftecter;
+			
+			public function __construct(Observable $observered, Affecter $afftecter)
+			{
+				$this->observered = $observered;
+				$this->afftecter = $afftecter;
+			}
+			
+			public function update($stub)
+			{
+				$this->affecter->setStub($stub);
+			}
+		}
 		
+		abstract class Observable
+		{
+			protected $observers = [ ];
+
+			public function register(Mediator $observer)
+			{
+			    $this->observers[] = $observer;
+			}
+
+			public function unregister(Mediator $observer)
+			{
+			    foreach ($this->observers as $index => $o) {
+			        if ($observer === $o) {
+			            unset( $this->observers[$index] );
+			        }
+			    }
+	  		}
+			
+			public function notify(Observable $other)
+			{
+				foreach ($this->observers as $observer) {
+					$observer->update($hint);
+				}
+			}
+		}
+		
+		class Observered extends Observable
+		{
+			private $stub;
+			
+			public function setStub($stub)
+			{
+				$this->stub = $stub;
+				
+				$this->notify($stub);
+			}
+		}
+		
+		interface Affecter
+		{
+			public function setStub($stub);
+		}
+		
+		class Affected implements Affecter
+		{
+			private $stub;
+			
+			public function setStub($stub)
+			{
+				$this->stub = $stub;
+			}
+		}
+
+
+
+
 		
