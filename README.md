@@ -61,4 +61,33 @@ _An accepted solution for a common problem_
 			}
 		}
 		
+## Facade Pattern
+- **When**: To simplify your API or intentionally conceal inner business logic.
+- **Why**: You can control the API and the real implementations and logic independently.
+- **Example**
+	
+		class StubsFacade
+		{
+			private $container;
+			
+			public function __construct(Container $container)
+			{
+				$this->container = $container;
+			}
+			
+			public function findStubs($input)
+			{
+				// Do job A
+				// Do job B
+				// Do job C
+				...
+				// Do job N
+				
+				return $result;
+			}
+		}
+		
+		
+
+		
 		
