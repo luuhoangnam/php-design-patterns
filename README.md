@@ -127,7 +127,46 @@ _An accepted solution for a common problem_
 			}
 		}
 
-		class User extends Observable
+### Abstract Server Pattern
+- **When**: You need to connect objects and maintain flexibility.
+- **Why**: Because it is the simplest way to achieve flexibility, while respecting both the dependency inversion principle and the open close principle.
+- **Example**
+
+        interface Animal
+        {
+            public function run();
+        }
+
+        class Cat implements Animal
+        {
+            public function run()
+            {
+                return 'Cat is running';
+            }
+        }
+
+        Dog Cat implements Animal
+        {
+            public function run()
+            {
+                return 'Dog is running';
+            }
+        }
+
+        class ZooKeeper
+        {
+            private $animal;
+
+            public function __construct(Animal $animal)
+            {
+                $this->animal = $animal;
+            }
+
+            public function letItOut()
+            {
+                $this->animal->run();
+            }
+        }
 		{
 			private $username;
 
