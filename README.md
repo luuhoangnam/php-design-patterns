@@ -277,9 +277,6 @@ _An accepted solution for a common problem_
             }
         }
 
-
-
-
 ### Facade Pattern
 - **Intent**
     - Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.
@@ -1026,6 +1023,71 @@ _An accepted solution for a common problem_
 				$this->queue->enqueue($message);
 			}
 		}
+		
+### Event Dispatcher Pattern
+- **Example**
+
+        interface SenderInterface
+
+		class EventManager
+		{
+			private $listeners = [];
+			
+			public function listen($event, $callback)
+			{
+				$this->listeners[$event][] = $callback;
+			}
+			
+			public function dispatch($event, SenderInterface $sender)
+			{
+				foreach($this->listeners[$event] as $listener) {
+					call_user_func($listener, $param);
+				}
+				
+			}
+		}
+
+		class BlogPublisher implements SenderInterface
+        {
+            private $eventManager;
+            private $title;
+
+            public function __construct(EventManager $eventManager)
+            {
+                $this->eventManager = $eventManager;
+            }
+
+            public function getTitle()
+            {
+                return $this->title;
+            }
+
+            public function setTitle($title)
+            {
+                $this->title = $title;
+                $this->eventManager->dispatch('blog_title_update', $this);
+                return $this;
+            }
+        }
+
+        class EventManagerTest extends PHPUnit_Framework_TestCase
+        {
+            public function testItCanDispatchEventOccur()
+            {
+                $eventManager = new EventManager;
+                $eventManager->listen(
+                    'blog_title_update',
+                    function (BlogPublisher $blog) {
+                        echo $blog->getTitle();
+                    }
+                );
+
+                $blog = new BlogPublisher($eventManager);
+                $blog->setTitle('The Title Changed');
+
+                $this->expectOutputRegex('/The Title Changed/');
+            }
+        }
 		
 		
 
