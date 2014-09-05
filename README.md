@@ -86,6 +86,89 @@ _An accepted solution for a common problem_
     5. The adapter/wrapper class "maps" the client interface to the adaptee interface.
     6. The client uses (is coupled to) the new interface
 
+### Bridge Pattern
+- **When**: The adapter pattern is not enough, and you change classes on both sides of the pipe.
+- **Why**: To offer increased flexibility at the cost of significant complexity.
+- **Structure** ![Bridge Pattern's Structure](https://sourcemaking.com/files/v2/content/patterns/Bridge___-2x.png)
+- **Check List**
+    1. Decide if two orthogonal dimensions exist in the domain. These independent concepts could be: abstraction/platform, or domain/infrastructure, or front-end/back-end, or interface/implementation.
+    2. Design the separation of concerns: what does the client want, and what do the platforms provide.
+    3. Design a platform-oriented interface that is minimal, necessary, and sufficient. Its goal is to decouple the abstraction from the platform.
+    4. Define a derived class of that interface for each platform.
+    5. Create the abstraction base class that "has a" platform object and delegates the platform-oriented functionality to it.
+    6. Define specializations of the abstraction class if desired.
+- **Example**
+
+        abstract class Switcher
+        {
+            protected $device;
+
+            public function __construct(Device $device)
+            {
+                $this->device = $device;
+            }
+
+            public abstract function On()
+            {
+                return $this->device->On();
+            }
+
+            public abstract function Off()
+            {
+                return $this->device->Off();
+            }
+        }
+
+        abstract class Device
+        {
+            protected $isOn = false;
+
+            public function On()
+            {
+                $this->isOn = true;
+            }
+
+            public function Off()
+            {
+                $this->isOn = false;
+            }
+        }
+
+        class Tv extends Device
+        {
+            private $channel;
+
+            public function On()
+            {
+                $this->isOn = true;
+                $this->channel = 1;
+            }
+
+            public function Off()
+            {
+                $this->isOn = false;
+                $this->channel = 2;
+            }
+        }
+
+        class Lamp extends Device
+        {
+            private $lightColor = 'blue';
+
+            public function On()
+            {
+                $this->isOn = true;
+                $this->lightColor = 'green';
+            }
+
+            public function Off()
+            {
+                $this->isOn = false;
+                $this->lightColor = 'blue';
+            }
+        }
+
+
 ### Facade Pattern
 - **Intent**
     - Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.
