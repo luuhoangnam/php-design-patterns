@@ -221,6 +221,64 @@ _An accepted solution for a common problem_
             }
         }
 
+### Decorator Pattern
+- **Intent**
+    - Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.
+    - Client-specified embellishment of a core object by recursively wrapping it.
+    - Wrapping a gift, putting it in a box, and wrapping the box.
+- **Structure** ![Decorator Pattern's Structure](https://sourcemaking.com/files/v2/content/patterns/Decorator__1-2x.png)
+- **Check list**
+    1. Ensure the context is: a single core (or non-optional) component, several optional embellishments or wrappers, and an interface that is common to all.
+    2. Create a "Lowest Common Denominator" interface that makes all classes interchangeable.
+    3. Create a second level base class (Decorator) to support the optional wrapper classes.
+    4. The Core class and Decorator class inherit from the LCD interface.
+    5. The Decorator class declares a composition relationship to the LCD interface, and this data member is initialized in its constructor.
+    6. The Decorator class delegates to the LCD object.
+    7. Define a Decorator derived class for each optional embellishment.
+    8. Decorator derived classes implement their wrapper functionality - and - delegate to the Decorator base class.
+    9. The client configures the type and ordering of Core and Decorator objects.
+- **When**: You can't change old classes, but you have to implement new behavior or state.
+- **Why**: It offers an unintrusive way of adding new functionality.
+- **Example**
+
+        interface Present
+        {
+            public function show()
+        }
+
+        class Gift implements Present
+        {
+            public function show()
+            {
+                return 'A gift from God!';
+            }
+        }
+
+        abstract class Decorator implements Present
+        {
+            protected $present;
+
+            public function __construct(Present $present)
+            {
+                $this->present = $present;
+            }
+
+            public function show()
+            {
+                return $this->present->show();
+            }
+        }
+
+        class class Package extends Decorator
+        {
+            public function pack()
+            {
+                return "Packed by Package: {$this->show()}";
+            }
+        }
+
+
+
 
 ### Facade Pattern
 - **Intent**
