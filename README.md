@@ -71,6 +71,21 @@ _An accepted solution for a common problem_
 
 ## Structural patterns
 
+### Adapter Pattern
+- **Intent**
+    - Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.
+    - Wrap an existing class with a new interface.
+    - Impedance match an old component to a new system
+- **When**: You need to create a connection with a pre-existing and potentially changing module, library, or API.
+- **Why**: To allow your business logic to rely only on the public methods the adapter offers, and permit changing the other side of the adapter easily.
+- **Check list**
+    1. Identify the players: the component(s) that want to be accommodated (i.e. the client), and the component that needs to adapt (i.e. the adaptee).
+    2. Identify the interface that the client requires.
+    3. Design a "wrapper" class that can "impedance match" the adaptee to the client.
+    4. The adapter/wrapper class "has a" instance of the adaptee class.
+    5. The adapter/wrapper class "maps" the client interface to the adaptee interface.
+    6. The client uses (is coupled to) the new interface
+
 ### Facade Pattern
 - **Intent**
     - Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.
