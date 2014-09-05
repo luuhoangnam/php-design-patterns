@@ -168,6 +168,59 @@ _An accepted solution for a common problem_
             }
         }
 
+### Composit Pattern
+- **Intent**
+    - Compose objects into tree structures to represent whole-part hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.
+    - Recursive composition
+    - "Directories contain entries, each of which could be a directory."
+1-to-many "has a" up the "is a" hierarchy
+- **When**: You have to apply an action to several similar objects.
+- **Why**: To reduce duplication and simplify how similar objects are called.
+- **Structure** ![Composite Pattern's Structure](https://sourcemaking.com/files/v2/content/patterns/Composite-2x.png)
+- **Check List**
+    1. Ensure that your problem is about representing "whole-part" hierarchical relationships.
+    2. Consider the heuristic, "Containers that contain containees, each of which could be a container." For example, "Assemblies that contain components, each of which could be an assembly." Divide your domain concepts into container classes, and containee classes.
+    3. Create a "lowest common denominator" interface that makes your containers and containees interchangeable. It should specify the behavior that needs to be exercised uniformly across all containee and container objects.
+    4. All container and containee classes declare an "is a" relationship to the interface.
+    5. All container classes declare a one-to-many "has a" relationship to the interface.
+    6. Container classes leverage polymorphism to delegate to their containee objects.
+    7. Child management methods [e.g. addChild(), removeChild()] should normally be defined in the Composite class. Unfortunately, the desire to treat Leaf and Composite objects uniformly may require that these methods be promoted to the abstract Component class. See the Gang of Four for a discussion of these "safety" versus "transparency" trade-offs.
+- **Example**
+
+        // Step 3
+        interface Component
+        {
+            public function doThis();
+        }
+
+        class Leaf implements Component
+        {
+            public function doThis()
+            {
+                // Something
+            }
+        }
+
+        class Composite implements Component
+        {
+            // Step 5: a one-to-many "has a" relationship
+            private $elements = [];
+
+            // Step 7
+            public function addElement(Component $element)
+            {
+                $this->$elements[] = $element;
+            }
+
+            // Step 4: "is a" relationship
+            public function doThis()
+            {
+                foreach($this->$elements as $element) {
+                    $element->doThis(); // Step 6
+                }
+            }
+        }
+
 
 ### Facade Pattern
 - **Intent**
